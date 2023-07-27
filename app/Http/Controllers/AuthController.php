@@ -10,27 +10,81 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+//    public function register(Request $request)
+//    {
+//        $request->validate([
+//            'name' => 'required|string|max:255',
+//            'email' => 'required|string|email|max:255|unique:users',
+//            'password' => 'required|string|min:8|confirmed',
+//        ]);
+//
+//        $user = User::create([
+//            'name' => $request->name,
+//            'email' => $request->email,
+//            'password' => Hash::make($request->password),
+//        ]);
+//
+//        return response()->json(['message' => 'User registered successfully'], 201);
+//    }
+//
+//    public function login(Request $request)
+//    {
+//        $request->validate([
+//            'email' => 'required|string|email',
+//            'password' => 'required|string',
+//        ]);
+//
+//        $credentials = $request->only('email', 'password');
+//
+//        if (Auth::attempt($credentials)) {
+//            $user = Auth::user();
+//            $token = $user->createToken($user)->accessToken;
+//            return response()->json(['token' => $token], 200);
+//        }
+//
+//        throw ValidationException::withMessages([
+//            'email' => ['The provided credentials are incorrect.'],
+//        ]);
+//    }
+//
+//    public function logout(Request $request)
+//    {
+//        $request->user()->token()->revoke();
+//        return response()->json(['message' => 'Successfully logged out'], 200);
+//    }
+//
+
+
+    // Register a new SuperAdmin
+    public function registerSuperAdmin(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+//        $user = User::create([
+//            'name' => $request->input('name'),
+//            'email' => $request->input('email'),
+//            'password' => bcrypt($request->input('password')),
+//            'role' => 'SuperAdmin', // Set the role as SuperAdmin
+//        ]);
+        $user = new User();
+        $user->username = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->role = 'SuperAdmin';
+        $user->save();
 
-        return response()->json(['message' => 'User registered successfully'], 201);
+        return response()->json($user, 201);
     }
 
+    // User login
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
+         $request->validate([
+            'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
@@ -38,19 +92,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-//            $token = Auth::user()->createToken('test');
-            $accessToken = auth()->user()->createToken('authToken')->accessToken;
-            return response()->json(['token' => $accessToken], 200);
+            $token = $user->createToken('authToken')->accessToken;
+            return response()->json(['token' => $token], 200);
+        } else {
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
-
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
-    }
-
-    public function logout(Request $request)
-    {
-        $request->user()->token()->revoke();
-        return response()->json(['message' => 'Successfully logged out'], 200);
     }
 }
