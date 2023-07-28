@@ -74,7 +74,7 @@ class AuthController extends Controller
         $user->username = $request->name;
         $user->email = $request->email;
         $user->password = $request->password;
-        $user->role = 'SuperAdmin';
+        $user->role = 'Customer';
         $user->save();
 
         return response()->json($user, 201);
@@ -93,9 +93,9 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('authToken')->accessToken;
-            return response()->json(['token' => $token], 200);
+            return response()->json(['token' => $token,'status'=>1,'message'=>'Successfully login'], 200);
         } else {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Unauthorized','status'=>0], 401);
         }
     }
 }
