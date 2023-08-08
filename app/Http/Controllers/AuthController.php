@@ -77,7 +77,10 @@ class AuthController extends Controller
         $user->role = 'Customer';
         $user->save();
 
-        return response()->json($user, 201);
+        return response()->json([
+            'message'=>"user register successfully",
+            'status'=>1
+    ], 201);
     }
 
     // User login
@@ -95,7 +98,7 @@ class AuthController extends Controller
             $token = $user->createToken('authToken')->accessToken;
             return response()->json(['token' => $token,'status'=>1,'message'=>'Successfully login'], 200);
         } else {
-            return response()->json(['message' => 'Unauthorized','status'=>0], 401);
+            return response()->json(['message' => 'please register your account','status'=>0], 401);
         }
     }
 }

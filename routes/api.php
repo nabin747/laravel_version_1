@@ -52,7 +52,7 @@ Route::group(['prefix'=>'super-admin','middleware'=>['auth:api']],function (){
 
 });
 // Routes for Admin
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:api']], function () {
+Route::group(['prefix' => 'admin'], function () {
     // Grounds CRUD routes
     Route::apiResource('grounds', AdminController::class);
 

@@ -60,8 +60,8 @@ class AdminController extends Controller
     public function index()
     {
 //        $grounds =Ground::with('admin:id,username,email')->get();
-        $grounds = DB::table('grounds')->join('users','grounds.admin_id','=','users.id')->select('grounds.groundName','grounds.location','users.username')->get();
-//        $grounds = Ground::all();
+        // $grounds = DB::table('grounds')->join('users','grounds.admin_id','=','users.id')->select('grounds.groundName','grounds.location','users.username')->get();
+       $grounds = Ground::all();
         return response()->json($grounds);
     }
 
@@ -75,10 +75,10 @@ class AdminController extends Controller
             // Add other validation rules as needed
         ]);
 
-        $adminId = Auth::id();
+        // $adminId = Auth::id();
         $ground = Ground::create(
             [
-                'admin_id' => $adminId,
+                'admin_id' => $adminId??1,
                 'groundName' => $request->input('groundName'),
                 'location' => $request->input('location'),
                 'description' => $request->input('description'),
