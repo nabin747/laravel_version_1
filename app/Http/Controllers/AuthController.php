@@ -76,7 +76,7 @@ class AuthController extends Controller
         $user->password = $request->password;
         $user->role = 'Customer';
         $user->save();
-
+        $user->sendEmailVerificationNotification();
         return response()->json($user, 201);
     }
 

@@ -60,7 +60,10 @@ class AdminController extends Controller
     public function index()
     {
 //        $grounds =Ground::with('admin:id,username,email')->get();
-        $grounds = DB::table('grounds')->join('users','grounds.admin_id','=','users.id')->select('grounds.groundName','grounds.location','users.username')->get();
+//        $grounds = DB::table('grounds')->join('users','grounds.admin_id','=','users.id')->select('grounds.groundName','grounds.location','users.username')->get();
+        $grounds = DB::table('grounds as g')->join('users as u','g.admin_id','=','u.id')
+            ->select('u.groundName','g.location','u.username')
+            ->get();
 //        $grounds = Ground::all();
         return response()->json($grounds);
     }

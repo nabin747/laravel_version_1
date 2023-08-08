@@ -52,7 +52,7 @@ Route::group(['prefix'=>'super-admin','middleware'=>['auth:api']],function (){
 
 });
 // Routes for Admin
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:api']], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:api', 'isSuperAdmin']], function () {
     // Grounds CRUD routes
     Route::apiResource('grounds', AdminController::class);
 
@@ -114,6 +114,9 @@ Route::group(['prefix' => 'customer', 'middleware' => ['auth:api']], function ()
 
 // SuperAdmin Registration
 Route::post('/register', [AuthController::class,'registerSuperAdmin']);
+Route::get('/email/verify/{id}/{hash}', function () {
+    return 'verified';
+})->name('verification.verify');
 // User Authentication
 Route::post('/login', [AuthController::class,'login']);
 //php artisan make:controller AuthController
